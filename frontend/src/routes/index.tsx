@@ -5,6 +5,7 @@ import Cart from '../pages/Cart';
 import Products from '../pages/Products';
 import AdminProducts from '../pages/admin/AdminProducts';
 import AdminUsers from '../pages/admin/AdminUsers';
+import ApiTest from '../pages/ApiTest';
 
 export default function Router() {
 
@@ -33,6 +34,10 @@ export default function Router() {
             {
                 path: 'admin-users',
                 element: <AdminUsers/>
+            },
+            {
+                path: 'test',
+                element: <ApiTest/>
             }
         ]
     );
