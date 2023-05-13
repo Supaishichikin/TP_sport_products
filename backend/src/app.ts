@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +9,6 @@ import { connectDB } from './db/conn';
 
 const port = 8030;
 const app = express();
-const cors = require('cors');
 const corsOptions = {origin: 'http://localhost:3000'}
 app.use(cors(corsOptions))
 
