@@ -26,6 +26,7 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello World!" });
 });
 
+// USERS AND AUTH
 app.post('/register', async (req, res) => {
   const { username, password, first_name, last_name, phone, email } = req.body;
 
@@ -93,6 +94,89 @@ app.post('/refresh-token', (req, res) => {
   } catch (error) {
     console.error('Error refreshing token:', error);
     res.status(401).json({ error: 'Invalid refresh token' });
+  }
+});
+
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.get('/users/:user_id', async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.post('/users', async (req, res) => {
+  const { first_name, last_name, phone, email, password, role } = req.body;
+  try {
+    const newUser = new User({
+      first_name,
+      last_name,
+      phone,
+      email,
+      password,
+      role,
+    });
+    const savedUser = await newUser.save();
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.put('/users/:user_id', async (req, res) => {
+  const { user_id } = req.params;
+  const { first_name, last_name, phone, email, password, role } = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      user_id,
+      {
+        first_name,
+        last_name,
+        phone,
+        email,
+        password,
+        role,
+      },
+      { new: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.delete('/users/:user_id', async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const deletedUser = await User.findByIdAndDelete(user_id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ message: 'User deleted' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'An error occurred' });
   }
 });
 
