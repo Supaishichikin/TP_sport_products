@@ -1,6 +1,9 @@
-// TODO: Fonctionnement search bar
+interface SearchBarProps {
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export default function SearchBar() {
+export default function SearchBar({ search, setSearch }: SearchBarProps) {
   return (
     <form className="w-full max-w-5xl mx-auto">
       <label
@@ -31,7 +34,9 @@ export default function SearchBar() {
           type="search"
           id="default-search"
           className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Search Mockups, Logos..."
+          placeholder=""
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           required
         />
         <button
