@@ -1,67 +1,19 @@
-import { deleteUser } from "../api/users";
 import type { User } from "../types/user";
+import UserRow from "./UserRow";
 
 export default function UsersTable({ users }: { users: User[] }) {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between py-4 bg-white">
-        <div>
-          <button
-            id="dropdownActionButton"
-            data-dropdown-toggle="dropdownAction"
-            className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5"
-            type="button"
-          >
-            <span className="sr-only">Action button</span>
-            Action
-            <svg
-              className="w-3 h-3 ml-2"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              ></path>
-            </svg>
-          </button>
-        </div>
-        <label htmlFor="table-search" className="sr-only">
-          Search
-        </label>
-      </div>
       <table className="w-full text-sm text-left text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-all-search"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="checkbox-all-search" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Phone number
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Role
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
+            {["Name", "Phone number", "Role", "Action 1", "Action 2"].map(
+              (column, index) => (
+                <th key={index} scope="col" className="px-6 py-3">
+                  {column}
+                </th>
+              )
+            )}
           </tr>
         </thead>
         <tbody>
@@ -232,58 +184,5 @@ export default function UsersTable({ users }: { users: User[] }) {
         </div>
       </div>
     </div>
-  );
-}
-
-function UserRow({ _id, first_name, last_name, phone, email, role }: User) {
-  async function handleDelete() {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-    const data = await deleteUser(_id);
-    console.log(data);
-
-    // TODO: Mettre à jour la liste des utilisateurs
-    window.location.reload();
-  }
-
-  return (
-    <tr className="bg-white border-b hover:bg-gray-50">
-      <td className="w-4 p-4">
-        <div className="flex items-center">
-          <input
-            id="checkbox-table-search-1"
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-          />
-          <label htmlFor="checkbox-table-search-1" className="sr-only">
-            checkbox
-          </label>
-        </div>
-      </td>
-      <th
-        scope="row"
-        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
-      >
-        <div className="pl-3">
-          <div className="text-base font-semibold">{`${first_name} ${last_name}`}</div>
-          <div className="font-normal text-gray-500">{email}</div>
-        </div>
-      </th>
-      <td className="px-6 py-4">{phone}</td>
-      <td className="px-6 py-4">
-        <div className="flex items-center">
-          <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
-          {role}
-        </div>
-      </td>
-      <td className="px-6 py-4">
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="text-sm font-medium text-red-600 hover:underline"
-        >
-          Delete user
-        </button>
-      </td>
-    </tr>
   );
 }
