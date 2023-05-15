@@ -10,7 +10,7 @@ function App() {
   return <>
     <div style={{height: "100vh", display: 'flex', flexDirection: 'column' }}>
       <HeaderNav/>
-        <div style={{ flex: 1, overflow: 'auto' }}>
+        <div style={{ flex: 1 }}>
           <Router/>
         </div>
       <Footer/>
