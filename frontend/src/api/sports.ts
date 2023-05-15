@@ -24,8 +24,8 @@ export async function getSportById(id: string) {
 
 export async function createSport(sport: any) {
   try {
-    const { data } = await axios.post(`${API_URL}/sports`, sport);
-    return data;
+    const { data: newSport } = await axios.post(`${API_URL}/sports`, sport);
+    return newSport;
   } catch (error) {
     handleError(error);
   }
@@ -33,8 +33,11 @@ export async function createSport(sport: any) {
 
 export async function updateSport(id: string, sport: any) {
   try {
-    const { data } = await axios.put(`${API_URL}/sports/${id}`, sport);
-    return data;
+    const { data: updatedSport } = await axios.put(
+      `${API_URL}/sports/${id}`,
+      sport
+    );
+    return updatedSport;
   } catch (error) {
     handleError(error);
   }
