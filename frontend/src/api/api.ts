@@ -13,6 +13,24 @@ export {
   updateUser,
 } from "./users";
 
+export {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+} from "./products";
+
+export {
+  createSport,
+  deleteSport,
+  getAllSports,
+  getSportById,
+  updateSport,
+} from "./sports";
+
+export { deleteFromCart, getCartByUserId, postCart, updateCart } from "./cart";
+
 export async function apiTest() {
   try {
     const { data } = await axios.get(API_URL);
