@@ -28,18 +28,18 @@ app.get("/", (req: Request, res: Response) => {
 
 // USERS AND AUTH
 app.post('/register', async (req, res) => {
-  const { username, password, first_name, last_name, phone, email } = req.body;
+  const { role, password, first_name, last_name, phone, email } = req.body;
 
   try { 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      username: username,
       password: hashedPassword,
       first_name: first_name,
       last_name: last_name,
       email: email,
-      phone: phone
+      phone: phone,
+      role: role
     });
 
     await newUser.save();
@@ -52,11 +52,11 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -68,7 +68,7 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const { accessToken, refreshToken } = generateTokens(username);
+    const { accessToken, refreshToken } = generateTokens(email);
 
     res.json({ accessToken, refreshToken });
   } catch (error) {
