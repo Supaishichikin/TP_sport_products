@@ -15,6 +15,16 @@ const userSchema = new mongoose.Schema({
 
 export const User = mongoose.model('User', userSchema);
 
+const productSchema = new mongoose.Schema({
+  name: String,
+  quantity: Number,
+  sport: String,
+  price: Number,
+  image: Buffer,
+});
+
+export const Product = mongoose.model('Product', productSchema);
+
 export const connectDB = async () => {
   try {
     mongoose.set("strictQuery", true);

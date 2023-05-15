@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-import { connectDB, User } from "./db/conn";
+import { connectDB, User, Product } from "./db/conn";
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const port = 8030;
@@ -179,6 +179,91 @@ app.delete('/users/:user_id', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
+// PRODUCTS
+
+app.get('/products', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.get('/product/:products_id', async (req, res) => {
+  const { products_id } = req.params;
+  try {
+    const product = await Product.findById(products_id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+
+app.post('/product', async (req, res) => {
+  const { name, quantity, sport, price, image } = req.body;
+  try {
+    const newProduct = new Product({
+      name,
+      quantity,
+      sport,
+      price,
+      image,
+    });
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.put('/product/:product_id', async (req, res) => {
+  const { product_id } = req.params;
+  const { name, quantity, sport, price, image } = req.body;
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      product_id,
+      {
+        name,
+        quantity,
+        sport,
+        price,
+        image,
+      },
+      { new: true }
+    );
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.delete('/product/:product_id', async (req, res) => {
+  const { product_id } = req.params;
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(product_id);
+    if (!deletedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json({ message: 'Product deleted' });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
