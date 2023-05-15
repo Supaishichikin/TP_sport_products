@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 function App() {
   
   return <>
-    <div style={{height: "100vh", display: 'flex', flexDirection: 'column' }}>
+    <div style={{minHeight: "100svh", display: 'flex', flexDirection: 'column' }}>
       <HeaderNav/>
         <div style={{ flex: 1 }}>
           <Router/>
