@@ -40,7 +40,7 @@ export async function sendRefreshTokenRequest({
 export async function getAllUsers() {
   try {
     const { data: users } = await axios.get(`${API_URL}/users`);
-    return { users };
+    return users;
   } catch (error) {
     handleError(error);
   }
