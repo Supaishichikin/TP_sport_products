@@ -57,8 +57,11 @@ export async function getUserById(id: string) {
 
 export async function updateUser(id: string, user: any) {
   try {
-    const { data } = await axios.put(`${API_URL}/users/${id}`, user);
-    return data;
+    const { data: updatedUser } = await axios.put(
+      `${API_URL}/users/${id}`,
+      user
+    );
+    return updatedUser;
   } catch (error) {
     handleError(error);
   }
