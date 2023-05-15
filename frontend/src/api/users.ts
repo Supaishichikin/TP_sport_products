@@ -13,10 +13,10 @@ export async function sendRegisterRequest(user: any) {
   }
 }
 
-export async function sendLoginRequest(user: any) {
+export async function sendLoginRequest(email: string, password: string) {
   try {
-    const { data: tokens } = await axios.post(`${API_URL}/login`, user);
-    return { tokens };
+    const response = await axios.post(`${API_URL}/login`, {email: email, password: password});
+    return response.data;
   } catch (error) {
     handleError(error);
   }

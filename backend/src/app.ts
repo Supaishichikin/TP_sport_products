@@ -1,6 +1,7 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import UserType from "./types/user";
 
 dotenv.config();
 
@@ -14,13 +15,31 @@ app.use(cors(corsOptions));
 app.use(express.json());
 connectDB();
 
-function generateTokens(username: string) {
-  const accessToken = jwt.sign({ username }, 'secretKey', { expiresIn: '1h' });
-  const refreshToken = jwt.sign({ username }, 'refreshSecretKey', { expiresIn: '7d' });
+function generateTokens(user: UserType) {
+  const accessToken = jwt.sign({ email: user.email,first_name: user.first_name,last_name: user.last_name,
+     phone: user.phone, role: user.role  }, 'secretKey', { expiresIn: '1h' });
+  const refreshToken = jwt.sign({ email: user.email,first_name: user.first_name,last_name: user.last_name,
+     phone: user.phone, role: user.role }, 'refreshSecretKey', { expiresIn: '7d' });
 
   return { accessToken, refreshToken };
 }
 
+const authenticate = (req: Request, res: Response, next: NextFunction) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
+
+  if (!accessToken) {
+    return res.status(401).json({ error: 'Access token not provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(accessToken, 'secretKey');
+    req.body.user = decoded;
+    next();
+  } catch (error) {
+    console.error('Error authenticating token:', error);
+    res.status(401).json({ error: 'Invalid access token' });
+  }
+};
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello World!" });
@@ -68,10 +87,19 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const { accessToken, refreshToken } = generateTokens(email);
+    const { accessToken, refreshToken } = generateTokens(user);
 
     res.json({ accessToken, refreshToken });
   } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.post('/logout', (req: Request, res: Response) => {
+  try{
+    res.status(200).json({ message: 'Logout successful' });
+  }catch(error){
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'An error occurred' });
   }
