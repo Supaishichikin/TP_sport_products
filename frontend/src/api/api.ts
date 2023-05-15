@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleError } from "./util";
 
 const API_URL = "http://localhost:8030";
 
@@ -6,8 +7,8 @@ const API_URL = "http://localhost:8030";
 
 export async function sendRegisterRequest(user: any) {
   try {
-    const response = await axios.post(`${API_URL}/register`, user);
-    return response.data;
+    const { data } = await axios.post(`${API_URL}/register`, user);
+    return { data };
   } catch (error) {
     handleError(error);
   }
@@ -15,8 +16,8 @@ export async function sendRegisterRequest(user: any) {
 
 export async function sendLoginRequest(user: any) {
   try {
-    const response = await axios.post(`${API_URL}/login`, user);
-    return response.data;
+    const { data: tokens } = await axios.post(`${API_URL}/login`, user);
+    return { tokens };
   } catch (error) {
     handleError(error);
   }
@@ -28,10 +29,10 @@ export async function sendRefreshTokenRequest({
   refreshToken: string;
 }) {
   try {
-    const response = await axios.post(`${API_URL}/refresh-token`, {
+    const { data } = await axios.post(`${API_URL}/refresh-token`, {
       refreshToken,
     });
-    return response.data;
+    return data;
   } catch (error) {
     handleError(error);
   }
@@ -39,8 +40,8 @@ export async function sendRefreshTokenRequest({
 
 export async function getAllUsers() {
   try {
-    const response = await axios.get(`${API_URL}/users`);
-    return response.data;
+    const { data: users } = await axios.get(`${API_URL}/users`);
+    return { users };
   } catch (error) {
     handleError(error);
   }
@@ -48,8 +49,8 @@ export async function getAllUsers() {
 
 export async function getUserById(id: string) {
   try {
-    const response = await axios.get(`${API_URL}/users/${id}`);
-    return response.data;
+    const { data: user } = await axios.get(`${API_URL}/users/${id}`);
+    return user;
   } catch (error) {
     handleError(error);
   }
@@ -57,8 +58,8 @@ export async function getUserById(id: string) {
 
 export async function updateUser(id: string, user: any) {
   try {
-    const response = await axios.put(`${API_URL}/users/${id}`, user);
-    return response.data;
+    const { data } = await axios.put(`${API_URL}/users/${id}`, user);
+    return data;
   } catch (error) {
     handleError(error);
   }
@@ -66,8 +67,8 @@ export async function updateUser(id: string, user: any) {
 
 export async function deleteUser(id: string) {
   try {
-    const response = await axios.delete(`${API_URL}/users/${id}`);
-    return response.data;
+    const { data } = await axios.delete(`${API_URL}/users/${id}`);
+    return data;
   } catch (error) {
     handleError(error);
   }
@@ -75,13 +76,9 @@ export async function deleteUser(id: string) {
 
 export async function apiTest() {
   try {
-    const response = await axios.get(API_URL);
-    return response.data;
+    const { data } = await axios.get(API_URL);
+    return data;
   } catch (error) {
     handleError(error);
   }
-}
-
-function handleError(err: unknown) {
-  if (err instanceof Error) return err.message;
 }
